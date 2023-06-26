@@ -6,7 +6,7 @@ class Client:
         if plan in self.plans_list:
             self.plan = plan
         else:
-            raise Exception('Plano inválido!')
+            raise Exception('Invalid plan!')
 
 
     def change_plan(self, new_plan):
