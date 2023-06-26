@@ -16,7 +16,7 @@ class Client:
             print('Invalid plan!')
 
 
-    def ver_filme(self, movie, movie_plan):
+    def watch_movie(self, movie, movie_plan):
         if self.plan == movie_plan:
             print(f'Watch Movie: {movie}')
         elif self.plan == 'Premium':
@@ -29,9 +29,9 @@ class Client:
 
 client_test = Client('luke', 'luke@gmail.com', 'Basic')
 print(client_test.plan)
-client_test.ver_filme('Batman', 'Premium')
+client_test.watch_movie('Batman', 'Premium')
 
 
 client_test.change_plan('Premium')
 print(client_test.plan)
-client_test.ver_filme('Batman', 'Premium')
+client_test.watch_movie('Batman', 'Premium')
