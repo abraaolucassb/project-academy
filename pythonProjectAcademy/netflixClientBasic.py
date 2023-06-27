@@ -1,98 +1,103 @@
-class ClientPlanValidator:
-    """Validates if the client's plan is compatible with the available plans.
+from abc import ABC, abstractmethod
 
-    Attributes:
-        plans_list (list): List of available plans.
 
-    Methods:
-        __init__(): Initializes a new instance of the ClientPlanValidator class.
-        is_valid_plan(plan: str) -> bool: Checks if a given plan is valid.
-    """
-    def __init__(self):
-        """Initializes a new instance of the ClientPlanValidator class."""
-        self.plans_list = ['Basic', 'Premium']
+class Plan(ABC):
+    """Base abstract class representing a plan."""
 
-    def is_valid_plan(self, plan: str):
-        """Checks if a given plan is valid.
+    @abstractmethod
+    def watch_movie(self, movie: str):
+        """Abstract method to watch a movie according to the plan.
+
+        Args:
+            movie (str): The movie to be watched.
+        """
+        pass
+
+
+class BasicPlan(Plan):
+    """Class representing a basic plan."""
+
+    def watch_movie(self, movie: str):
+        """Watch a movie in the basic plan.
+
+        Args:
+            movie (str): The movie to be watched.
+        """
+        print(f'Watching movie: {movie}')
+
+
+class PremiumPlan(Plan):
+    """Class representing a premium plan."""
+
+    def watch_movie(self, movie: str):
+        """Watch a movie in the premium plan.
+
+        Args:
+            movie (str): The movie to be watched.
+        """
+        print(f'Watching movie: {movie} in HD')
+
+
+class PlanValidator:
+    """Class responsible for validating plans."""
+
+    @staticmethod
+    def is_valid_plan(plan: str) -> bool:
+        """Check if a plan is valid.
 
         Args:
             plan (str): The plan to be validated.
 
         Returns:
             bool: True if the plan is valid, False otherwise.
-
         """
-        return plan in self.plans_list
+        return plan in ['Basic', 'Premium']
 
 
 class Client:
-    """Class that represents a Client with the attributes: name, email, and plan.
+    """Class representing a client with a plan."""
 
-    Attributes:
-        name (str): The client's name.
-        email (str): The client's email address.
-        plan (str): The client's plan.
-
-    Methods:
-        __init__(name, email, plan): Initializes a new instance of the Client class.
-        change_plan(new_plan): Changes the client's plan.
-        watch_movie(movie, movie_plan): Simulates that the client is watching a movie.
-    """
-
-    def __init__(self, name: str, email: str, plan: str):
-        """Initializes a new instance of the Client class.
+    def __init__(self, name: str, email: str, plan: Plan):
+        """Initialize a new instance of the Client class.
 
         Args:
             name (str): The client's name.
             email (str): The client's email.
-            plan (str): The client's plan.
-
+            plan (Plan): The client's plan.
         """
         self.name = name
         self.email = email
         self.plan = plan
 
-    def change_plan(self, new_plan: str):
-        """Changes the user's plan to another.
+    def change_plan(self, new_plan: Plan):
+        """Change the client's plan to a new plan.
 
         Args:
-            new_plan (str): New plan that the user wants.
+            new_plan (Plan): The new plan for the client.
         """
-        plan_validator = ClientPlanValidator()
-        if plan_validator.is_valid_plan(new_plan):
-            self.plan = new_plan
-        else:
-            print('Invalid plan!')
+        self.plan = new_plan
 
     def watch_movie(self, movie: str, movie_plan: str):
-        """Watch movie according to the client's plan.
+        """Watch a movie according to the client's plan.
 
         Args:
-            movie (str): Client's favorite movie.
-            movie_plan (str): Movie plan.
+            movie (str): The movie to be watched.
+            movie_plan (str): The plan associated with the movie.
         """
-        if self.plan == movie_plan:
-            print(f'Watch Movie: {movie}')
-        elif self.plan == 'Premium':
-            print(f'Watch Movie: {movie}')
-        elif self.plan == 'Basic' and movie_plan == 'Premium':
-            print('Upgrade to Premium to see this movie.')
+        if PlanValidator.is_valid_plan(movie_plan):
+            self.plan.watch_movie(movie)
         else:
             print('Invalid plan!')
 
 
-# Test the Client class.
+# Usage of the code
+basic_plan = BasicPlan()
+premium_plan = PremiumPlan()
 
-# Create a new client with a Basic plan.
-client_test = Client('luke', 'luke@gmail.com', 'Basic')
-print(client_test.plan)
+# Creating a client with the basic plan
+client = Client('John Doe', 'john@example.com', basic_plan)
+client.watch_movie('Movie A', 'Basic')
 
-# Try to watch a movie with a different plan.
-client_test.watch_movie('Batman', 'Premium')
-
-# Changes the client's plan to Premium.
-client_test.change_plan('Premium')
-print(client_test.plan)
-
-# Watch a movie with the new plan.
-client_test.watch_movie('Batman', 'Premium')
+# Changing the client's plan to the premium plan
+client.change_plan(premium_plan)
+client.watch_movie('Movie B', 'Premium')
