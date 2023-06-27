@@ -1,10 +1,36 @@
+class ClientPlanValidator:
+    """Validates if the client's plan is compatible with the available plans.
+
+    Attributes:
+        plans_list (list): List of available plans.
+
+    Methods:
+        __init__(): Initializes a new instance of the ClientPlanValidator class.
+        is_valid_plan(plan: str) -> bool: Checks if a given plan is valid.
+    """
+    def __init__(self):
+        """Initializes a new instance of the ClientPlanValidator class."""
+        self.plans_list = ['Basic', 'Premium']
+
+    def is_valid_plan(self, plan: str):
+        """Checks if a given plan is valid.
+
+        Args:
+            plan (str): The plan to be validated.
+
+        Returns:
+            bool: True if the plan is valid, False otherwise.
+
+        """
+        return plan in self.plans_list
+
+
 class Client:
     """Class that represents a Client with the attributes: name, email, and plan.
 
     Attributes:
         name (str): The client's name.
         email (str): The client's email address.
-        plans_list (list): List of available plans.
         plan (str): The client's plan.
 
     Methods:
@@ -21,16 +47,10 @@ class Client:
             email (str): The client's email.
             plan (str): The client's plan.
 
-        Raises:
-            Exception: If the plan entered by the customer is not within the plans_list.
         """
         self.name = name
         self.email = email
-        self.plans_list = ['Basic', 'Premium']
-        if plan in self.plans_list:
-            self.plan = plan
-        else:
-            raise Exception('Invalid plan!')
+        self.plan = plan
 
     def change_plan(self, new_plan: str):
         """Changes the user's plan to another.
@@ -38,7 +58,8 @@ class Client:
         Args:
             new_plan (str): New plan that the user wants.
         """
-        if new_plan in self.plans_list:
+        plan_validator = ClientPlanValidator()
+        if plan_validator.is_valid_plan(new_plan):
             self.plan = new_plan
         else:
             print('Invalid plan!')
